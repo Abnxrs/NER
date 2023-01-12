@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  deleteProject,
   editProject,
   getAllProjects,
   getSingleProject,
@@ -53,5 +54,6 @@ projectRouter.post(
   editProject
 );
 projectRouter.post('/:wbsNum/set-team', nonEmptyString(body('teamId')), validateInputs, setProjectTeam);
+projectRouter.delete('/:wbsNum/delete', validateInputs, deleteProject);
 
 export default projectRouter;

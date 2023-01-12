@@ -339,3 +339,37 @@ export const setProjectTeam = async (req: Request, res: Response) => {
 
   return res.status(200).json({ message: `Project ${project.projectId} successfully assigned to team ${body.teamId}.` });
 };
+
+export const deleteProject = async (req: Request, res: Response) => {
+  // check for valid WBS number
+  const parsedWbs: WbsNumber = validateWBS(req.params.wbsNum);
+
+  if (!isProject(parsedWbs)) {
+    return res.status(400).json({ message: `${req.params.wbsNum} is not a valid project WBS #!` });
+  }
+
+  const project = await prisma.project.findFirst({
+    where: {
+      wbsElement: {
+        carNumber: parsedWbs.carNumber,
+        projectNumber: parsedWbs.projectNumber,
+        workPackageNumber: parsedWbs.workPackageNumber
+      }
+    }
+  });
+
+  if (!project) {
+    return res.status(404).json({ message: `no associated project for ${req.params.wbsNum}` });
+  }
+
+  const user = await getCurrentUser(res);
+  if (user.role !== Role.APP_ADMIN) {
+    return res.status(403).json({ message: 'Access Denied' });
+  }
+
+  await prisma.project.delete({
+    where: { projectId: project.projectId }
+  });
+
+  return res.status(200).json({ message: `Project ${project.projectId} successfully deleted.` });
+};
