@@ -61,7 +61,8 @@ const TaskList = ({ project, defaultClosed }: TaskListProps) => {
     isLeadership(user.role) ||
     project.projectLead?.userId === user.userId ||
     project.projectManager?.userId === user.userId ||
-    project.team?.leader.userId === user.userId;
+    project.team?.leader.userId === user.userId ||
+    project.workPackages.some((wp) => wp.projectLead?.userId === user.userId);
 
   const addTaskButton: JSX.Element = (
     <Button
