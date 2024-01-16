@@ -9,13 +9,14 @@ import {
   ExpenseType,
   OtherProductReason,
   Receipt,
-  Reimbursement,
   ReimbursementProduct,
   ReimbursementProductReason,
   ReimbursementRequest,
   ReimbursementStatus,
   ReimbursementStatusType,
-  Vendor
+  ReimbursementPlainDate,
+  Vendor,
+  toISODateString
 } from 'shared';
 import reimbursementRequestQueryArgs from '../prisma-query-args/reimbursement-requests.query-args';
 import userTransformer from './user.transformer';
@@ -110,10 +111,10 @@ export const vendorTransformer = (vendor: Prisma.VendorGetPayload<null>): Vendor
 
 export const reimbursementTransformer = (
   reimbursement: Prisma.ReimbursementGetPayload<typeof reimbursementQueryArgs>
-): Reimbursement => {
+): ReimbursementPlainDate => {
   return {
     reimbursementId: reimbursement.reimbursementId,
-    dateCreated: reimbursement.dateCreated,
+    dateCreated: toISODateString(reimbursement.dateCreated),
     amount: reimbursement.amount,
     userSubmitted: userTransformer(reimbursement.userSubmitted)
   };

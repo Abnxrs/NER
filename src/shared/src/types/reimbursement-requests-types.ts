@@ -117,3 +117,10 @@ export interface Reimbursement {
   amount: number;
   userSubmitted: User;
 }
+
+export interface ReimbursementPlainDate {
+  reimbursementId: string;
+  dateCreated: string;
+  amount: number;
+  userSubmitted: User;
+}

@@ -40,4 +40,16 @@ const daysBetween = (date1: Date, date2: Date): number => {
   return Math.round((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
 };
 
-export { addWeeksToDate, addDaysToDate, getDay, daysBetween };
+/**
+ * Returns the plain date string (yyyy-mm-dd) of a given Date.
+ *
+ * Uses UTC timezone.
+ *
+ * @param date the date to stringify
+ * @returns the date only part of the ISO date string
+ */
+const toISODateString = (date: Date): string => {
+  return date.toISOString().split('T')[0];
+};
+
+export { addWeeksToDate, addDaysToDate, getDay, daysBetween, toISODateString };

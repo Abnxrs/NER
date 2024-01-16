@@ -9,7 +9,6 @@ import { Club_Accounts, Reimbursement_Request, Reimbursement_Status_Type, User }
 import {
   ClubAccount,
   ExpenseType,
-  Reimbursement,
   ReimbursementReceiptCreateArgs,
   ReimbursementRequest,
   ReimbursementStatusType,
@@ -18,7 +17,8 @@ import {
   isGuest,
   isHead,
   WbsReimbursementProductCreateArgs,
-  OtherReimbursementProductCreateArgs
+  OtherReimbursementProductCreateArgs,
+  ReimbursementPlainDate
 } from 'shared';
 import prisma from '../prisma/prisma';
 import {
@@ -69,7 +69,7 @@ export default class ReimbursementRequestService {
    * @param user ther user retrieving the reimbursements
    * @returns all reimbursements for the given user
    */
-  static async getUserReimbursements(user: User): Promise<Reimbursement[]> {
+  static async getUserReimbursements(user: User): Promise<ReimbursementPlainDate[]> {
     const userReimbursements = await prisma.reimbursement.findMany({
       where: { userSubmittedId: user.userId },
       ...reimbursementQueryArgs
@@ -82,7 +82,7 @@ export default class ReimbursementRequestService {
    * @param user the user retrieving all the reimbursements
    * @returns all the reimbursements in the database
    */
-  static async getAllReimbursements(user: User): Promise<Reimbursement[]> {
+  static async getAllReimbursements(user: User): Promise<ReimbursementPlainDate[]> {
     await validateUserIsPartOfFinanceTeam(user);
 
     const reimbursements = await prisma.reimbursement.findMany({ ...reimbursementQueryArgs });
@@ -180,7 +180,7 @@ export default class ReimbursementRequestService {
    * @param submitter the person performing the reimbursement
    * @returns the created reimbursement
    */
-  static async reimburseUser(amount: number, dateReceived: string, submitter: User): Promise<Reimbursement> {
+  static async reimburseUser(amount: number, dateReceived: string, submitter: User): Promise<ReimbursementPlainDate> {
     if (isGuest(submitter.role)) {
       throw new AccessDeniedException('Guests cannot reimburse a user for their expenses.');
     }
